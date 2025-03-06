@@ -98,9 +98,10 @@ function displayBooks(booksToShow) {
   // Add event listeners to "Read Online" buttons
   const readButtons = document.querySelectorAll(".read-online");
   readButtons.forEach(button => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", (e) => {
       const filePath = button.getAttribute("data-file");
-      openBookPopup(filePath);
+      const bookItem = button.closest(".book-item");
+      openBookPopup(filePath, bookItem);
     });
   });
 
@@ -121,7 +122,7 @@ function displayBooks(booksToShow) {
 }
 
 // Open Book Popup
-function openBookPopup(filePath) {
+function openBookPopup(filePath, bookItem) {
   // Create overlay
   const overlay = document.createElement("div");
   overlay.className = "popup-overlay";
@@ -135,6 +136,12 @@ function openBookPopup(filePath) {
       <button class="close-popup">Exit</button>
     </div>
   `;
+
+  // Position popup next to the book
+  const bookRect = bookItem.getBoundingClientRect();
+  popup.style.position = "absolute";
+  popup.style.top = `${bookRect.top}px`;
+  popup.style.left = `${bookRect.right + 20}px`; // 20px offset from the book
 
   // Append popup to overlay
   overlay.appendChild(popup);
