@@ -91,9 +91,18 @@ function displayBooks(booksToShow) {
       <h2>${book.title}</h2>
       <p>${book.author}</p>
       <p>${book.description}</p>
-      <a href="${book.filePath}" target="_blank">Read Online</a>
+      <button class="read-online" data-file="${book.filePath}">Read Online</button>
     </div>
   `).join("");
+
+  // Add event listeners to "Read Online" buttons
+  const readButtons = document.querySelectorAll(".read-online");
+  readButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const filePath = button.getAttribute("data-file");
+      openBookPopup(filePath);
+    });
+  });
 
   const bookItems = document.querySelectorAll(".book-item");
   bookItems.forEach(item => {
@@ -108,6 +117,25 @@ function displayBooks(booksToShow) {
     item.addEventListener("mouseleave", () => {
       item.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg)";
     });
+  });
+}
+
+// Open Book Popup
+function openBookPopup(filePath) {
+  const popup = document.createElement("div");
+  popup.className = "book-popup";
+  popup.innerHTML = `
+    <div class="popup-content">
+      <embed src="${filePath}" type="application/pdf" width="100%" height="100%" />
+      <button class="close-popup">Exit</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  // Close popup when "Exit" is clicked
+  const closeButton = popup.querySelector(".close-popup");
+  closeButton.addEventListener("click", () => {
+    document.body.removeChild(popup);
   });
 }
 
@@ -364,3 +392,18 @@ window.addEventListener("resize", () => {
     setChatbotPosition(currentX, currentY);
   }
 });
+
+// Fetch IP Address (Serverless Function)
+async function fetchIP() {
+  try {
+    const response = await fetch("/.netlify/functions/get-ip"); // Adjust endpoint for Vercel
+    const data = await response.json();
+    localStorage.setItem("userIP", data.ip); // Store IP in local storage
+    console.log("User IP:", data.ip);
+  } catch (error) {
+    console.error("Error fetching IP:", error);
+  }
+}
+
+// Call fetchIP on page load
+fetchIP();
