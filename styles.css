@@ -353,6 +353,14 @@ footer {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   position: absolute;
   z-index: 1001;
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.book-popup.active {
+  transform: scale(1);
+  opacity: 1;
 }
 
 /* Close Button */
