@@ -121,7 +121,7 @@ function displayBooks(booksToShow) {
   });
 }
 
-// Open Book Popup - FIXED
+// Open Book Popup - FIXED FOR IPHONE AND NO DOWNLOAD
 function openBookPopup(filePath, bookItem) {
   // Create overlay
   const overlay = document.createElement("div");
@@ -131,7 +131,7 @@ function openBookPopup(filePath, bookItem) {
   const popup = document.createElement("div");
   popup.className = "book-popup";
   popup.innerHTML = `
-    <embed src="${filePath}" type="application/pdf" />
+    <iframe class="pdf-viewer" src="${filePath}" sandbox="allow-same-origin allow-scripts" scrolling="auto"></iframe>
     <button class="close-popup">Exit</button>
   `;
 
