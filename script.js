@@ -137,12 +137,6 @@ function openBookPopup(filePath, bookItem) {
     </div>
   `;
 
-  // Position popup next to the book
-  const bookRect = bookItem.getBoundingClientRect();
-  popup.style.position = "absolute";
-  popup.style.top = `${bookRect.top}px`;
-  popup.style.left = `${bookRect.right + 20}px`; // 20px offset from the book
-
   // Append popup to overlay
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
@@ -159,6 +153,12 @@ function openBookPopup(filePath, bookItem) {
       document.body.removeChild(overlay);
     }
   });
+
+  // Animate popup
+  setTimeout(() => {
+    popup.style.transform = "scale(1)";
+    popup.style.opacity = "1";
+  }, 10);
 }
 
 // Search Books
