@@ -124,14 +124,6 @@ body {
   position: relative;
   z-index: 5;
   flex: 1;
-  display: none; /* Default to none, JS will toggle it */
-}
-
-/* Ensure main-page takes full height */
-#main-page:not(.hidden) {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Full viewport height */
 }
 
 header {
@@ -169,7 +161,7 @@ header {
   justify-content: center;
   padding: 40px;
   perspective: 800px;
-  flex-grow: 1; /* Ensure it takes available space */
+  flex-grow: 1;
 }
 
 .book-item {
@@ -211,8 +203,8 @@ footer {
   padding: 20px;
   text-align: center;
   width: 100%;
-  position: absolute; /* Restored to absolute for laptops */
-  bottom: 0; /* Locked to bottom of viewport */
+  position: absolute;
+  bottom: 0;
   z-index: 10;
 }
 
@@ -247,88 +239,6 @@ footer {
   transform: scale(1.1);
 }
 
-.cosmic-chat {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  cursor: move;
-  z-index: 15;
-}
-
-.chat-orb {
-  width: 50px;
-  height: 50px;
-  background: radial-gradient(circle, #00ffff, #ff00ff);
-  border-radius: 50%;
-  cursor: pointer;
-  animation: orbGlow 2s infinite;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
-}
-
-@keyframes orbGlow {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-.cosmic-panel {
-  background: rgba(0, 0, 0, 0.9);
-  border: 2px solid #00ffff;
-  border-radius: 10px;
-  width: 300px;
-  padding: 15px;
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
-}
-
-.close-button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #ff00ff;
-  color: #00ffff;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-size: 12px;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-}
-
-.close-button:hover {
-  background: #00ffff;
-  color: #ff00ff;
-}
-
-.message-field {
-  height: 200px;
-  overflow-y: auto;
-  margin-bottom: 10px;
-  color: #fff;
-}
-
-.chat-input-container {
-  display: flex;
-  gap: 10px;
-}
-
-.cosmic-button {
-  background: #ff00ff;
-  color: #00ffff;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-}
-
-.hidden {
-  display: none;
-}
-
 /* Popup Overlay */
 .popup-overlay {
   position: fixed;
@@ -341,7 +251,7 @@ footer {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 /* Popup Content */
@@ -391,35 +301,35 @@ footer {
   background: #ff1a1a;
 }
 
-/* Embed PDF */
-embed {
+/* iframe for PDF */
+iframe {
   width: 100%;
-  height: 60vh; /* Consistent height for laptops */
+  height: 60vh;
   border: none;
   border-radius: 5px;
   flex-grow: 1;
   overflow: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  display: block; /* Ensure proper rendering */
+  -webkit-overflow-scrolling: touch;
+  display: block;
+  background: #fff; /* Ensure visibility if PDF fails to load */
 }
 
 /* Media Query for iPhones */
 @media (max-width: 480px) {
   .book-grid {
-    padding-bottom: 150px; /* Prevent overlap with footer on iPhones */
+    padding-bottom: 150px;
   }
 
   .book-popup {
     width: 95vw;
-    max-height: 85vh; /* More height for iPhones */
+    max-height: 85vh;
     padding: 15px;
   }
 
-  embed {
-    height: 50vh; /* Adjusted for iPhones */
-    margin-top: 10px; /* Space above embed */
-    -webkit-user-select: none; /* Prevent zooming issues on iOS */
-    touch-action: pan-y; /* Enable vertical scrolling */
+  iframe {
+    height: 50vh;
+    margin-top: 10px;
+    touch-action: pan-y;
   }
 
   .close-popup {
@@ -431,23 +341,27 @@ embed {
   }
 
   footer {
-    position: relative; /* Natural flow on iPhones */
-    margin-top: 20px; /* Space above footer */
+    position: relative;
+    margin-top: 20px;
   }
 }
 
 /* For very small screens like iPhone SE */
 @media (max-width: 375px) {
   .book-grid {
-    padding-bottom: 120px; /* Adjusted for smaller screens */
+    padding-bottom: 120px;
   }
 
   .book-popup {
-    width: 98vw; /* Full width for tiny screens */
+    width: 98vw;
     padding: 10px;
   }
 
-  embed {
-    height: 45vh; /* Reduced height for very small screens */
+  iframe {
+    height: 45vh;
   }
+}
+
+.hidden {
+  display: none;
 }
