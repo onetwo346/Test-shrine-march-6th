@@ -349,8 +349,8 @@ footer {
   border-radius: 10px;
   width: 90vw; /* Use viewport width for responsiveness */
   max-width: 600px; /* Cap width for larger screens */
-  height: 90vh; /* Use viewport height for full coverage */
-  max-height: 800px; /* Cap height for larger screens */
+  height: auto; /* Let content dictate height */
+  max-height: 80vh; /* Cap height for larger screens */
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   position: relative; /* Changed from absolute for better flex alignment */
@@ -358,7 +358,7 @@ footer {
   transform: scale(0.9);
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  display: flex; /* Ensure internal layout works */
+  display: flex;
   flex-direction: column; /* Stack content vertically */
   overflow: hidden; /* Prevent content from overflowing */
 }
@@ -394,7 +394,7 @@ footer {
 /* Embed PDF - FIXED */
 embed {
   width: 100%;
-  height: calc(100% - 50px); /* Full height minus padding and close button space */
+  height: 60vh; /* Fixed height for better control */
   border: none;
   border-radius: 5px;
   flex-grow: 1; /* Ensure it takes available space */
@@ -402,55 +402,23 @@ embed {
   -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
 }
 
-@media (max-width: 768px) {
-  .cosmic-text h1 { font-size: 2.5rem; }
-  .cosmic-text p { font-size: 1.2rem; }
-  .warp-button { font-size: 1.2rem; padding: 10px 25px; }
-  .intro-logo { width: 120px; }
-  .neon-title { font-size: 2rem; }
-  .cosmic-input { width: 90%; }
-  .book-item { width: 160px; }
-  .cosmic-panel { width: 250px; }
-  /* Ensure footer stays relative on smaller screens (iPhones) */
-  footer {
-    position: relative;
-    bottom: auto;
-    margin-top: auto;
-  }
-  /* Popup Fixes for Tablets */
-  .book-popup {
-    width: 95vw; /* Slightly wider on smaller screens */
-    height: 95vh; /* Maximize height */
-    padding: 15px; /* Reduce padding for more space */
-  }
-  .close-popup {
-    width: 25px;
-    height: 25px;
-    font-size: 14px;
-  }
-}
-
+/* Media Query for iPhones */
 @media (max-width: 480px) {
-  .cosmic-text h1 { font-size: 2rem; }
-  .cosmic-text p { font-size: 1rem; }
-  .intro-logo { width: 100px; }
-  .book-item { width: 140px; }
-  /* Ensure footer stays relative on smaller screens (iPhones) */
-  footer {
-    position: relative;
-    bottom: auto;
-    margin-top: auto;
-  }
-  /* Popup Fixes for iPhones */
   .book-popup {
-    width: 98vw; /* Almost full width on tiny screens */
-    height: 98vh; /* Almost full height */
-    padding: 10px;
-    border-radius: 0; /* Remove border radius for full-screen feel */
+    width: 90vw; /* Slightly smaller width for iPhones */
+    height: auto; /* Let content dictate height */
+    max-height: 70vh; /* Smaller max height for iPhones */
+    padding: 15px; /* Slightly reduced padding */
+    border-radius: 10px; /* Keep rounded corners */
   }
+
+  embed {
+    height: 50vh; /* Smaller height for iPhones */
+  }
+
   .close-popup {
-    top: 10px;
-    right: 10px;
+    top: 5px;
+    right: 5px;
     width: 25px;
     height: 25px;
     font-size: 14px;
