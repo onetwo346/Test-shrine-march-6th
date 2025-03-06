@@ -328,7 +328,7 @@ footer {
   display: none;
 }
 
-/* Popup Overlay - FIXED */
+/* Popup Overlay - FIXED FOR IPHONE */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -340,28 +340,31 @@ footer {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  overflow: auto; /* Allow scrolling if content exceeds viewport */
+  padding: 0; /* Remove any padding that might offset */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
-/* Popup Content - FIXED */
+/* Popup Content - FIXED FOR IPHONE */
 .book-popup {
   background: #1e1e1e;
   border-radius: 10px;
-  width: 90vw; /* Use viewport width for responsiveness */
-  max-width: 600px; /* Cap width for larger screens */
-  height: 90vh; /* Use viewport height for full coverage */
-  max-height: 800px; /* Cap height for larger screens */
-  padding: 20px;
+  width: 100%; /* Full width on all devices */
+  height: 100%; /* Full height on all devices */
+  max-width: 600px; /* Cap for larger screens */
+  max-height: 100vh; /* Respect viewport height */
+  padding: 10px; /* Minimal padding */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  position: relative; /* Changed from absolute for better flex alignment */
+  position: relative;
   z-index: 1001;
   transform: scale(0.9);
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  display: flex; /* Ensure internal layout works */
-  flex-direction: column; /* Stack content vertically */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent content overflow */
 }
 
+/* Active state */
 .book-popup.active {
   transform: scale(1);
   opacity: 1;
@@ -383,20 +386,20 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1002; /* Above embed */
+  z-index: 1002;
 }
 
 .close-popup:hover {
   background: #ff1a1a;
 }
 
-/* Embed PDF - FIXED */
-embed {
+/* iframe for PDF - NEW */
+iframe.pdf-viewer {
   width: 100%;
-  height: calc(100% - 50px); /* Full height minus padding and close button space */
+  height: calc(100% - 40px); /* Adjust for close button and padding */
   border: none;
   border-radius: 5px;
-  flex-grow: 1; /* Ensure it takes available space */
+  flex-grow: 1;
 }
 
 @media (max-width: 768px) {
@@ -408,17 +411,13 @@ embed {
   .cosmic-input { width: 90%; }
   .book-item { width: 160px; }
   .cosmic-panel { width: 250px; }
-  /* Ensure footer stays relative on smaller screens (iPhones) */
   footer {
     position: relative;
     bottom: auto;
     margin-top: auto;
   }
-  /* Popup Fixes for Tablets */
   .book-popup {
-    width: 95vw; /* Slightly wider on smaller screens */
-    height: 95vh; /* Maximize height */
-    padding: 15px; /* Reduce padding for more space */
+    padding: 5px; /* Even less padding for tablets */
   }
   .close-popup {
     width: 25px;
@@ -432,17 +431,13 @@ embed {
   .cosmic-text p { font-size: 1rem; }
   .intro-logo { width: 100px; }
   .book-item { width: 140px; }
-  /* Ensure footer stays relative on smaller screens (iPhones) */
   footer {
     position: relative;
     bottom: auto;
     margin-top: auto;
   }
-  /* Popup Fixes for iPhones */
   .book-popup {
-    width: 98vw; /* Almost full width on tiny screens */
-    height: 98vh; /* Almost full height */
-    padding: 10px;
+    padding: 5px; /* Minimal padding for iPhones */
   }
   .close-popup {
     top: 5px;
