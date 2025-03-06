@@ -121,7 +121,7 @@ function displayBooks(booksToShow) {
   });
 }
 
-// Open Book Popup
+// Open Book Popup - FIXED
 function openBookPopup(filePath, bookItem) {
   // Create overlay
   const overlay = document.createElement("div");
@@ -131,15 +131,18 @@ function openBookPopup(filePath, bookItem) {
   const popup = document.createElement("div");
   popup.className = "book-popup";
   popup.innerHTML = `
-    <div class="popup-content">
-      <embed src="${filePath}" type="application/pdf" width="100%" height="100%" />
-      <button class="close-popup">Exit</button>
-    </div>
+    <embed src="${filePath}" type="application/pdf" />
+    <button class="close-popup">Exit</button>
   `;
 
   // Append popup to overlay
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
+
+  // Add active class for animation
+  setTimeout(() => {
+    popup.classList.add("active");
+  }, 10);
 
   // Close popup when "Exit" is clicked
   const closeButton = popup.querySelector(".close-popup");
@@ -153,12 +156,6 @@ function openBookPopup(filePath, bookItem) {
       document.body.removeChild(overlay);
     }
   });
-
-  // Animate popup
-  setTimeout(() => {
-    popup.style.transform = "scale(1)";
-    popup.style.opacity = "1";
-  }, 10);
 }
 
 // Search Books
