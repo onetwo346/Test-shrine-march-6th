@@ -127,7 +127,7 @@ body {
   display: none; /* Default to none, JS will toggle it */
 }
 
-/* Ensure main-page takes full height and pushes footer down */
+/* Ensure main-page takes full height */
 #main-page:not(.hidden) {
   display: flex;
   flex-direction: column;
@@ -211,9 +211,9 @@ footer {
   padding: 20px;
   text-align: center;
   width: 100%;
-  position: relative; /* Changed to relative for better flow */
+  position: absolute; /* Restored to absolute for laptops */
+  bottom: 0; /* Locked to bottom of viewport */
   z-index: 10;
-  margin-top: auto; /* Push footer to bottom of flex container */
 }
 
 .footer-content {
@@ -406,12 +406,12 @@ embed {
 /* Media Query for iPhones */
 @media (max-width: 480px) {
   .book-grid {
-    padding-bottom: 150px; /* Increased padding to prevent overlap with footer */
+    padding-bottom: 150px; /* Prevent overlap with footer on iPhones */
   }
 
   .book-popup {
     width: 95vw;
-    max-height: 85vh; /* Slightly more height for iPhones */
+    max-height: 85vh; /* More height for iPhones */
     padding: 15px;
   }
 
@@ -431,8 +431,8 @@ embed {
   }
 
   footer {
-    position: relative; /* Keep relative for natural flow */
-    margin-top: 20px; /* Ensure space above footer */
+    position: relative; /* Natural flow on iPhones */
+    margin-top: 20px; /* Space above footer */
   }
 }
 
