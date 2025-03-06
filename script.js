@@ -121,13 +121,38 @@ function searchBooks() {
 }
 
 // Updated Chatbot Response Logic
+let lastBookRecommended = null; // Track the last book recommended
+let lastQuery = null; // Track the last query for context
+
 function chatbotResponse(message) {
   const msg = message.toLowerCase().trim();
-  let response = "The Shrine hums with cosmic energy...";
+  let response = "";
 
   // Greetings
   if (msg === "hi" || msg === "hello") {
-    response = "Greetings, cosmic traveler. I am BookShrine, your guide. How may I assist?";
+    const greetings = [
+      "Greetings, cosmic traveler! How may I assist you today?",
+      "Hello, seeker of stories! What brings you to the Book Shrine?",
+      "Welcome back, explorer! How can I guide you today?"
+    ];
+    response = greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  // How are you / How was your day
+  else if (msg.includes("how are you") || msg.includes("how was your day")) {
+    const feelings = [
+      "I'm doing well, thank you! How about you?",
+      "My day has been peaceful, filled with the whispers of countless stories.",
+      "I'm great! Ready to help you find your next adventure."
+    ];
+    response = feelings[Math.floor(Math.random() * feelings.length)];
+    lastQuery = "how_are_you";
+  }
+
+  // Follow-up to "How are you?"
+  else if (lastQuery === "how_are_you" && (msg.includes("good") || msg.includes("fine") || msg.includes("well"))) {
+    response = "That's great to hear! What can I help you with today?";
+    lastQuery = null; // Reset context
   }
 
   // About Book Shrine
@@ -143,7 +168,13 @@ function chatbotResponse(message) {
   // Best Book to Read
   else if (msg.includes("best book") || msg.includes("recommend a book")) {
     const bestBook = books.find(book => book.title.toLowerCase().includes("heaven bound")) || books[0];
+    lastBookRecommended = bestBook; // Remember the last book recommended
     response = `I recommend "${bestBook.title}" by ${bestBook.author}. It's a ${bestBook.description}.`;
+  }
+
+  // Follow-up on Last Recommended Book
+  else if (msg.includes("tell me more") && lastBookRecommended) {
+    response = `"${lastBookRecommended.title}" by ${lastBookRecommended.author} is about ${lastBookRecommended.description}. Would you like to read it?`;
   }
 
   // Search for Books by Genre or Title
@@ -172,7 +203,7 @@ function chatbotResponse(message) {
 
   // Contact Info
   else if (msg.includes("contact") || msg.includes("email")) {
-    response = `You can reach out to us at ${bookShrineInfo.contact}.`;
+    response = `You can reach out to Kofi Fosu at ${bookShrineInfo.contact}.`;
   }
 
   // Creator Info
@@ -180,9 +211,31 @@ function chatbotResponse(message) {
     response = `Book Shrine was created by ${bookShrineInfo.creator}. ${bookShrineInfo.founded}`;
   }
 
-  // Default Response
+  // Default Response (20+ Variations)
   else {
-    response = "I sense your curiosity, but I need more details to assist. Try asking about books, genres, or Book Shrine!";
+    const defaultResponses = [
+      "I sense your curiosity, but I need more details to assist. Try asking about books, genres, or Book Shrine!",
+      "The cosmos whispers mysteries. What would you like to know?",
+      "I'm here to guide you. What are you seeking today?",
+      "The stars align with your presence. What brings you here?",
+      "The Book Shrine holds countless stories. What are you searching for?",
+      "The universe is vast, and so are the stories here. What do you seek?",
+      "The cosmic winds carry your words. How may I assist?",
+      "The Shrine's energy resonates with your presence. What do you need?",
+      "The stories here are endless. What would you like to explore?",
+      "The cosmos is full of wonders. What are you curious about?",
+      "The Book Shrine is a gateway to infinite worlds. What do you desire?",
+      "The stars are listening. What would you like to know?",
+      "The Shrine's aura is strong today. How can I help you?",
+      "The cosmic library awaits your query. What do you seek?",
+      "The universe is full of stories. What are you looking for?",
+      "The Shrine's energy is vibrant. What do you need assistance with?",
+      "The stars are aligned in your favor. What do you wish to know?",
+      "The Book Shrine is a treasure trove of tales. What are you searching for?",
+      "The cosmos is alive with stories. What do you desire to know?",
+      "The Shrine's whispers grow louder. What do you seek, traveler?"
+    ];
+    response = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   }
 
   return response;
