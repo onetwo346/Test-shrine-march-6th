@@ -122,6 +122,11 @@ function displayBooks(booksToShow) {
 
 // Open Book Popup
 function openBookPopup(filePath) {
+  // Create overlay
+  const overlay = document.createElement("div");
+  overlay.className = "popup-overlay";
+
+  // Create popup
   const popup = document.createElement("div");
   popup.className = "book-popup";
   popup.innerHTML = `
@@ -130,12 +135,22 @@ function openBookPopup(filePath) {
       <button class="close-popup">Exit</button>
     </div>
   `;
-  document.body.appendChild(popup);
+
+  // Append popup to overlay
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
 
   // Close popup when "Exit" is clicked
   const closeButton = popup.querySelector(".close-popup");
   closeButton.addEventListener("click", () => {
-    document.body.removeChild(popup);
+    document.body.removeChild(overlay);
+  });
+
+  // Close popup when clicking outside the popup
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+    }
   });
 }
 
