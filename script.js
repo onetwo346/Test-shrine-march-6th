@@ -1,153 +1,313 @@
-// Enhanced Chatbot Response Logic for BookShrine
-// Design by Kofi Fosu | Modified by Claude Assistant
+// script.js
+// Design by Kofi Fosu | cosmoscoderr@gmail.com
 
-// This function handles all user queries about the website and books
-function chatbotResponse(message) {
-  const msg = message.toLowerCase().trim();
-  
-  // Greeting responses
-  if (msg.match(/^(hi|hello|hey|greetings|hi there)/)) {
-    return "Greetings, cosmic traveler. I am BookShrine, your guide to this celestial library. How may I assist you today?";
-  }
-  
-  // About BookShrine
-  if (msg.includes("what is book shrine") || msg.includes("about book shrine") || msg.includes("tell me about this site")) {
-    return bookShrineInfo.about + " " + bookShrineInfo.mission;
-  }
-  
-  if (msg.includes("mission") || msg.includes("purpose")) {
-    return bookShrineInfo.mission;
-  }
-  
-  if (msg.includes("who made") || msg.includes("creator") || msg.includes("who is the author") || 
-      msg.includes("who built") || msg.includes("who created") || msg.includes("developer")) {
-    return `${bookShrineInfo.creator} You can contact the creator at ${bookShrineInfo.contact}`;
-  }
-  
-  if (msg.includes("when") && (msg.includes("made") || msg.includes("created") || msg.includes("founded"))) {
-    return bookShrineInfo.founded;
-  }
-  
-  if (msg.includes("contact") || msg.includes("email") || msg.includes("reach out")) {
-    return `You can contact Kofi Fosu (Cosmos Coderr) at ${bookShrineInfo.contact}`;
-  }
-  
-  if (msg.includes("features") || msg.includes("what can you do")) {
-    return `Book Shrine offers: ${bookShrineInfo.features.join(", ")}`;
-  }
-  
-  // Book Collection Queries
-  if (msg.includes("how many books")) {
-    return `The Book Shrine currently houses ${books.length} cosmic literary works, with more being added regularly.`;
-  }
-  
-  if (msg.includes("list all books") || msg.includes("show all books") || msg.includes("what books")) {
-    const bookTitles = books.map(book => book.title).join(", ");
-    return `Here are all the books in our collection: ${bookTitles}`;
-  }
-  
-  if (msg.includes("genres") || msg.includes("categories") || msg.includes("types of books")) {
-    return `Book Shrine features books across various genres including: ${bookShrineInfo.genres.join(", ")}`;
-  }
-  
-  // Author Specific Queries
-  if ((msg.includes("kofi") || msg.includes("fosu")) && msg.includes("books")) {
-    const kofiBooks = books.filter(book => book.author === "Kofi Fosu");
-    return `Kofi Fosu has written ${kofiBooks.length} books: ${kofiBooks.map(book => book.title).join(", ")}`;
-  }
-  
-  if ((msg.includes("cosmos") || msg.includes("coderr")) && msg.includes("books")) {
-    const cosmosBooks = books.filter(book => book.author === "Cosmos Coderr");
-    return `Cosmos Coderr has written ${cosmosBooks.length} books: ${cosmosBooks.map(book => book.title).join(", ")}`;
-  }
-  
-  // Book Series Queries
-  if (msg.includes("heaven bound") || msg.includes("series")) {
-    const heavenBoundSeries = books.filter(book => book.title.includes("Heaven Bound"));
-    if (heavenBoundSeries.length > 0) {
-      return `The Heaven Bound series currently has ${heavenBoundSeries.length} books: ${heavenBoundSeries.map(book => book.title).join(", ")}. It's a Sci-Fi Adventure Thrilling Series by Kofi Fosu.`;
-    }
-  }
-  
-  // Specific Book Information
-  for (const book of books) {
-    if (msg.includes(book.title.toLowerCase())) {
-      return `"${book.title}" is written by ${book.author}. ${book.description} You can read it online through our website.`;
-    }
-  }
-  
-  // Help commands
-  if (msg.includes("help") || msg.includes("what can i ask") || msg.includes("how to use")) {
-    return "You can ask me about Book Shrine, our books, authors, genres, or specific titles. Try questions like 'How many books do you have?', 'Who created Book Shrine?', or 'Tell me about Heaven Bound'.";
-  }
-  
-  // Reading experience
-  if (msg.includes("how to read") || msg.includes("where to read") || msg.includes("access books")) {
-    return "You can read any of our books by clicking the 'Read Online' link below each book in the collection. This will open the PDF in a new tab.";
-  }
-  
-  // Fallback response with suggestion
-  return "The cosmic energies are vibrating with your question, but I'm not sure I understand. Try asking about our books, the creator, or specific titles like 'Whispers of the Heart' or 'The Algorithm Of Souls'.";
+const books = [
+  { title: "Whispers of the Heart", author: "Kofi Fosu", description: "A classic romance full of passion.", filePath: "Whispers-of-the-Heart.pdf" },
+  { title: "Ancestors Hammer", author: "Kofi Fosu", description: "Fantasy Adventure.", filePath: "ancestor-hammer.pdf" },
+  { title: "Deeper than Ocean", author: "Kofi Fosu", description: "Romance.", filePath: "Deeper-than-Ocean.pdf" },
+  { title: "The Algorithm Of Souls", author: "Kofi Fosu", description: "A Sci-Fi, Adventure, Metaphysical.", filePath: "The-Algorithm-Of-Souls.pdf" },
+  { title: "Heaven Bound (Book 1)", author: "Kofi Fosu", description: "A Sci-Fi, Adventure Thrilling Series.", filePath: "heaven-bound.pdf" },
+  { title: "River Of Time", author: "Kofi Fosu", description: "Proverbs.", filePath: "River Of Time.pdf" },
+  { title: "Heaven Bound (Book 2)", author: "Kofi Fosu", description: "A Sci-Fi Adventure Thrilling Series.", filePath: "heaven-bound2.pdf" },
+  { title: "The Last Echo (Book 1)", author: "Kofi Fosu", description: "A Sci-Fi Adventure Thrilling Series.", filePath: "The-Last-echo.pdf" },
+  { title: "The Void Wanderer", author: "Cosmos Coderr", description: "Science Fiction/Fantasy.", filePath: "The-Void-Wanderer.pdf" },
+  { title: "The Silent Architect", author: "Cosmos Coderr", description: "Science Fiction/Mystery.", filePath: "The-silent-Achitect.pdf" },
+];
+
+const bookShrineInfo = {
+  about: "Book Shrine is a celestial digital library created by Kofi Fosu that houses unique works of fiction across multiple genres including romance, science fiction, fantasy, and adventure.",
+  mission: "To connect readers with extraordinary stories that transport them to new worlds and dimensions, offering an immersive reading experience unlike any other.",
+  creator: "Kofi Fosu, also known as Cosmos Coderr, is a visionary author and developer who crafts both stories and digital experiences.",
+  features: ["3D interactive book display", "Cosmic animated background", "AI-powered assistant", "Immersive portal transitions", "Curated collection of original works"],
+  genres: ["Romance", "Science Fiction", "Fantasy", "Adventure", "Mystery"],
+  contact: "cosmoscoderr@gmail.com",
+  founded: "The Book Shrine was established as a cosmic haven for literary exploration in 2023."
+};
+
+const introPage = document.getElementById("intro-page");
+const mainPage = document.getElementById("main-page");
+const startButton = document.getElementById("start-button");
+const bookGrid = document.querySelector(".book-grid");
+const searchInput = document.getElementById("search");
+const chatbotCore = document.getElementById("chatbot-core");
+const chatbotWindow = document.getElementById("chatbot-window");
+const chatbotInput = document.getElementById("chatbot-input");
+const sendButton = document.getElementById("send-button");
+const chatbotMessages = document.getElementById("chatbot-messages");
+const closeChatbot = document.getElementById("close-chatbot");
+const canvas = document.getElementById("cosmic-canvas");
+const ctx = canvas.getContext("2d");
+const clickSound = document.getElementById("click-sound");
+const universeSound = document.getElementById("universe-sound");
+
+// Cosmic Background
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const stars = [];
+for (let i = 0; i < 100; i++) {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 2 + 1,
+    speedX: (Math.random() - 0.5) * 0.3,
+    speedY: (Math.random() - 0.5) * 0.3,
+  });
 }
 
-// Search function improvement to include description search
+function animateStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#fff";
+  stars.forEach(s => {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+    ctx.fill();
+    s.x += s.speedX;
+    s.y += s.speedY;
+    if (s.x < 0 || s.x > canvas.width) s.speedX *= -1;
+    if (s.y < 0 || s.y > canvas.height) s.speedY *= -1;
+  });
+  requestAnimationFrame(animateStars);
+}
+animateStars();
+
+// Portal Transition with Sound
+startButton.addEventListener("click", () => {
+  clickSound.play();
+  universeSound.play();
+  const portalOverlay = document.getElementById("portal-overlay");
+  portalOverlay.classList.remove("hidden");
+  setTimeout(() => {
+    introPage.style.display = "none";
+    mainPage.style.display = "block";
+    mainPage.classList.remove("hidden"); // Ensure flexbox kicks in
+  }, 2000);
+});
+
+// Display Books
+function displayBooks(booksToShow) {
+  bookGrid.innerHTML = booksToShow.map(book => `
+    <div class="book-item">
+      <h2>${book.title}</h2>
+      <p>${book.author}</p>
+      <p>${book.description}</p>
+      <a href="${book.filePath}" target="_blank">Read Online</a>
+    </div>
+  `).join("");
+
+  const bookItems = document.querySelectorAll(".book-item");
+  bookItems.forEach(item => {
+    item.addEventListener("mousemove", (e) => {
+      const rect = item.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rotateY = Math.min(Math.max(x / 10, -20), 20);
+      const rotateX = Math.min(Math.max(-y / 10, -20), 20);
+      item.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    item.addEventListener("mouseleave", () => {
+      item.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg)";
+    });
+  });
+}
+
+// Search Books
 function searchBooks() {
   const query = searchInput.value.toLowerCase().trim();
   const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(query) || 
-    book.author.toLowerCase().includes(query) ||
-    book.description.toLowerCase().includes(query)
+    book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query)
   );
   displayBooks(filteredBooks);
-  
-  // Provide feedback if no results
-  if (filteredBooks.length === 0 && query !== '') {
-    const noResultsElement = document.createElement("div");
-    noResultsElement.className = "no-results";
-    noResultsElement.textContent = "No books match your search. Try a different term or ask the chatbot for assistance.";
-    bookGrid.appendChild(noResultsElement);
+}
+
+// Updated Chatbot Response Logic
+function chatbotResponse(message) {
+  const msg = message.toLowerCase().trim();
+  let response = "The Shrine hums with cosmic energy...";
+
+  // Greetings
+  if (msg === "hi" || msg === "hello") {
+    response = "Greetings, cosmic traveler. I am BookShrine, your guide. How may I assist?";
+  }
+
+  // About Book Shrine
+  else if (msg.includes("what is book shrine") || msg.includes("tell me about book shrine")) {
+    response = `${bookShrineInfo.about} ${bookShrineInfo.mission}`;
+  }
+
+  // Number of Books
+  else if (msg.includes("how many books") || msg.includes("number of books")) {
+    response = `We currently house ${books.length} unique books in our celestial library.`;
+  }
+
+  // Best Book to Read
+  else if (msg.includes("best book") || msg.includes("recommend a book")) {
+    const bestBook = books.find(book => book.title.toLowerCase().includes("heaven bound")) || books[0];
+    response = `I recommend "${bestBook.title}" by ${bestBook.author}. It's a ${bestBook.description}.`;
+  }
+
+  // Search for Books by Genre or Title
+  else if (msg.includes("book about") || msg.includes("find a book")) {
+    const keyword = msg.split("about")[1]?.trim() || msg.split("find a book")[1]?.trim();
+    if (keyword) {
+      const matchingBooks = books.filter(book =>
+        book.title.toLowerCase().includes(keyword) ||
+        book.description.toLowerCase().includes(keyword)
+      );
+      if (matchingBooks.length > 0) {
+        response = `Here are some books related to "${keyword}":\n` +
+          matchingBooks.map(book => `- "${book.title}" by ${book.author}: ${book.description}`).join("\n");
+      } else {
+        response = `No books found related to "${keyword}". Try another genre or topic!`;
+      }
+    } else {
+      response = "What kind of book are you looking for?";
+    }
+  }
+
+  // List All Genres
+  else if (msg.includes("genres") || msg.includes("types of books")) {
+    response = `We have books in the following genres:\n${bookShrineInfo.genres.join(", ")}.`;
+  }
+
+  // Contact Info
+  else if (msg.includes("contact") || msg.includes("email")) {
+    response = `You can reach out to us at ${bookShrineInfo.contact}.`;
+  }
+
+  // Creator Info
+  else if (msg.includes("who created") || msg.includes("creator")) {
+    response = `Book Shrine was created by ${bookShrineInfo.creator}. ${bookShrineInfo.founded}`;
+  }
+
+  // Default Response
+  else {
+    response = "I sense your curiosity, but I need more details to assist. Try asking about books, genres, or Book Shrine!";
+  }
+
+  return response;
+}
+
+// Chatbot Interaction
+sendButton.addEventListener("click", () => {
+  clickSound.play();
+  const userMessage = chatbotInput.value.trim();
+  if (userMessage) {
+    addMessage(userMessage, "user");
+    chatbotInput.value = "";
+    setTimeout(() => {
+      const response = chatbotResponse(userMessage);
+      addMessage(response, "bot");
+    }, 1000);
+  }
+});
+
+chatbotInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    sendButton.click();
+  }
+});
+
+function addMessage(text, sender) {
+  const messageElement = document.createElement("div");
+  messageElement.textContent = text;
+  messageElement.style = sender === "user" 
+    ? "text-align: right; color: #00ffff; margin: 5px 0; white-space: pre-wrap;" 
+    : "text-align: left; color: #ddd; margin: 5px 0; white-space: pre-wrap;";
+  chatbotMessages.appendChild(messageElement);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+// Chatbot Toggle and Drag
+chatbotCore.addEventListener("click", () => {
+  clickSound.play();
+  chatbotWindow.classList.toggle("hidden");
+  if (!chatbotWindow.classList.contains("hidden") && chatbotMessages.children.length === 0) {
+    addMessage("Welcome to BookShrine! How may I assist your cosmic journey?", "bot");
+  }
+});
+
+closeChatbot.addEventListener("click", () => {
+  clickSound.play();
+  chatbotWindow.classList.add("hidden");
+});
+
+// Draggable Chatbot (with touch support for iPhones)
+const draggableChat = document.getElementById("chatbot-draggable");
+let isDragging = false, currentX, currentY, initialX, initialY;
+
+// Mouse Events
+draggableChat.addEventListener("mousedown", startDragging);
+document.addEventListener("mousemove", drag);
+document.addEventListener("mouseup", stopDragging);
+
+// Touch Events for iPhone
+draggableChat.addEventListener("touchstart", startDraggingTouch, { passive: false });
+document.addEventListener("touchmove", dragTouch, { passive: false });
+document.addEventListener("touchend", stopDragging);
+
+function startDragging(e) {
+  if (e.target === chatbotCore) {
+    isDragging = true;
+    initialX = e.clientX - currentX;
+    initialY = e.clientY - currentY;
   }
 }
 
-// Enhanced chatbot message handling with typing effect
-function addMessage(text, sender) {
-  const messageElement = document.createElement("div");
-  messageElement.classList.add(sender === "user" ? "user-message" : "bot-message");
-  
-  if (sender === "user") {
-    messageElement.textContent = text;
-    messageElement.style = "text-align: right; color: #00ffff; margin: 5px 0; white-space: pre-wrap;";
-    chatbotMessages.appendChild(messageElement);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-  } else {
-    // Add typing indicator
-    const typingIndicator = document.createElement("div");
-    typingIndicator.classList.add("typing-indicator");
-    typingIndicator.textContent = "...";
-    typingIndicator.style = "text-align: left; color: #ddd; margin: 5px 0;";
-    chatbotMessages.appendChild(typingIndicator);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    
-    // Simulate typing effect
-    let i = 0;
-    messageElement.style = "text-align: left; color: #ddd; margin: 5px 0; white-space: pre-wrap;";
-    
-    setTimeout(() => {
-      // Remove typing indicator
-      chatbotMessages.removeChild(typingIndicator);
-      
-      // Add the real message with typing effect
-      chatbotMessages.appendChild(messageElement);
-      
-      const typingEffect = setInterval(() => {
-        messageElement.textContent = text.substring(0, i);
-        i++;
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-        
-        if (i > text.length) {
-          clearInterval(typingEffect);
-        }
-      }, 20);
-    }, 800);
+function drag(e) {
+  if (isDragging) {
+    e.preventDefault();
+    currentX = e.clientX - initialX;
+    currentY = e.clientY - initialY;
+    setChatbotPosition(currentX, currentY);
   }
 }
+
+function startDraggingTouch(e) {
+  if (e.target === chatbotCore) {
+    isDragging = true;
+    const touch = e.touches[0];
+    initialX = touch.clientX - currentX;
+    initialY = touch.clientY - currentY;
+  }
+}
+
+function dragTouch(e) {
+  if (isDragging) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    currentX = touch.clientX - initialX;
+    currentY = touch.clientY - initialY;
+    setChatbotPosition(currentX, currentY);
+  }
+}
+
+function stopDragging() {
+  isDragging = false;
+}
+
+function setChatbotPosition(x, y) {
+  draggableChat.style.left = `${x}px`;
+  draggableChat.style.top = `${y}px`;
+  draggableChat.style.bottom = "auto";
+  draggableChat.style.right = "auto";
+}
+
+// Initial Position
+currentX = window.innerWidth - 70; // Right: 20px
+currentY = window.innerHeight - 70; // Bottom: 20px
+setChatbotPosition(currentX, currentY);
+
+// Initial Display
+displayBooks(books);
+
+// Resize Handler
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  currentX = window.innerWidth - 70;
+  currentY = window.innerHeight - 70;
+  if (!isDragging) {
+    setChatbotPosition(currentX, currentY);
+  }
+});
