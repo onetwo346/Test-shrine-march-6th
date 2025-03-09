@@ -41,7 +41,7 @@ const clickSound = document.getElementById("click-sound");
 const universeSound = document.getElementById("universe-sound");
 
 // OpenAI API Key (replace with your own)
-const OPENAI_API_KEY = "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"; // Get this from platform.openai.com
+const OPENAI_API_KEY = "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"; // Get from platform.openai.com
 
 // Cosmic Background
 canvas.width = window.innerWidth;
@@ -162,7 +162,6 @@ async function chatbotResponse(message) {
   const msg = message.toLowerCase().trim();
   let response = "";
 
-  // Custom Responses (Preserve Your Logic)
   if (msg === "hi" || msg === "hello") {
     const greetings = [
       "Greetings, cosmic traveler! How may I assist you today?",
@@ -213,7 +212,6 @@ async function chatbotResponse(message) {
   } else if (msg.includes("who created") || msg.includes("creator")) {
     response = `Book Shrine was created by ${bookShrineInfo.creator}. ${bookShrineInfo.founded}`;
   } else {
-    // OpenAI Fallback for Complex Queries
     try {
       const prompt = `
         You are BookShrine, a cosmic AI assistant created by Kofi Fosu. You know everything about Bookshrine:
@@ -287,11 +285,14 @@ closeChatbot.addEventListener("click", () => {
 });
 
 const draggableChat = document.getElementById("chatbot-draggable");
-let isDragging = false, currentX, currentY, initialX, initialY;
+let isDragging = false, currentX = 0, currentY = 0, initialX = 0, initialY = 0;
 
+// Mouse Events
 draggableChat.addEventListener("mousedown", startDragging);
 document.addEventListener("mousemove", drag);
 document.addEventListener("mouseup", stopDragging);
+
+// Touch Events
 draggableChat.addEventListener("touchstart", startDraggingTouch, { passive: false });
 document.addEventListener("touchmove", dragTouch, { passive: false });
 document.addEventListener("touchend", stopDragging);
@@ -343,6 +344,7 @@ function setChatbotPosition(x, y) {
   draggableChat.style.right = "auto";
 }
 
+// Initial Position
 currentX = window.innerWidth - 70;
 currentY = window.innerHeight - 70;
 setChatbotPosition(currentX, currentY);
@@ -354,15 +356,16 @@ displayBooks(books);
 window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  currentX = window.innerWidth - 70;
-  currentY = window.innerHeight - 70;
-  if (!isDragging) setChatbotPosition(currentX, currentY);
+  if (!isDragging) {
+    currentX = window.innerWidth - 70;
+    currentY = window.innerHeight - 70;
+    setChatbotPosition(currentX, currentY);
+  }
 });
 
-// IP Address Handling and New Page Feature
+// IP Address Handling (No Popup)
 async function handleUserIP() {
   try {
-    // Use a public API to get IP (since this is client-side)
     const response = await fetch("https://api.ipify.org?format=json");
     const data = await response.json();
     const userIP = data.ip;
@@ -371,36 +374,14 @@ async function handleUserIP() {
     if (!storedIP || storedIP !== userIP) {
       localStorage.setItem("userIP", userIP);
       console.log("New IP detected:", userIP);
-      openNewPageForIP(userIP);
+      // Uncomment below to open a new tab for new IPs (customize URL as needed)
+      // window.open("https://bookshrine.com/welcome", "_blank");
     } else {
       console.log("Returning IP:", userIP);
     }
   } catch (error) {
     console.error("Error fetching IP:", error);
   }
-}
-
-function openNewPageForIP(ip) {
-  // Option 1: Open a new tab (comment out if not desired)
-  // window.open("https://bookshrine.com/welcome?ip=" + ip, "_blank");
-
-  // Option 2: Show a welcome popup (uncomment to use)
-  const overlay = document.createElement("div");
-  overlay.className = "popup-overlay";
-  const popup = document.createElement("div");
-  popup.className = "welcome-popup";
-  popup.innerHTML = `
-    <h2>Welcome to BookShrine!</h2>
-    <p>Greetings, traveler from IP ${ip}! Explore our cosmic library.</p>
-    <button class="close-welcome">Enter</button>
-  `;
-  overlay.appendChild(popup);
-  document.body.appendChild(overlay);
-
-  setTimeout(() => popup.classList.add("active"), 10);
-
-  const closeButton = popup.querySelector(".close-welcome");
-  closeButton.addEventListener("click", () => document.body.removeChild(overlay));
 }
 
 // Call IP handler on page load
