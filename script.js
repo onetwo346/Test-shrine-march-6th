@@ -40,8 +40,8 @@ const ctx = canvas.getContext("2d");
 const clickSound = document.getElementById("click-sound");
 const universeSound = document.getElementById("universe-sound");
 
-// OpenAI API Key (using the one you provided)
-const OPENAI_API_KEY = "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";
+// OpenAI API Key (replace with your own)
+const OPENAI_API_KEY = "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"; // Get from platform.openai.com
 
 // Cosmic Background
 canvas.width = window.innerWidth;
@@ -148,9 +148,7 @@ function openBookPopup(filePath, bookItem) {
   setTimeout(() => popup.classList.add("active"), 10);
 
   const iframe = popup.querySelector(".pdf-viewer");
-  let scale = window.innerWidth < 600 ? 0.6 : 0.8; // Smaller default scale on phones
-  iframe.style.transform = `scale(${scale})`;
-
+  let scale = 0.8; // Default scale
   const zoomInBtn = popup.querySelector(".zoom-in");
   const zoomOutBtn = popup.querySelector(".zoom-out");
 
@@ -162,10 +160,11 @@ function openBookPopup(filePath, bookItem) {
 
   zoomOutBtn.addEventListener("click", () => {
     scale -= 0.1;
-    if (scale < 0.4) scale = 0.4; // Adjusted min scale for phones
+    if (scale < 0.5) scale = 0.5;
     iframe.style.transform = `scale(${scale})`;
   });
 
+  // iOS fallback
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   if (isIOS) {
     iframe.addEventListener("load", () => {
