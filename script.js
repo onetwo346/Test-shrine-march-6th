@@ -123,18 +123,22 @@ function displayBooks(booksToShow) {
   });
 }
 
-// Open Book Popup (Fixed for iPhone)
+// Open Book Popup (Adjusted PDF Size)
 function openBookPopup(filePath, bookItem) {
   const overlay = document.createElement("div");
   overlay.className = "popup-overlay";
   const popup = document.createElement("div");
   popup.className = "book-popup";
 
-  // Use iframe instead of embed for better iOS compatibility
+  // Iframe with smaller default size and zoom controls
   popup.innerHTML = `
-    <iframe src="${filePath}" frameborder="0" style="width: 100%; height: 80vh;"></iframe>
+    <iframe src="${filePath}" frameborder="0" class="pdf-viewer" style="width: 100%; height: 60vh; transform: scale(0.8); transform-origin: top left;"></iframe>
+    <div class="pdf-controls">
+      <button class="zoom-in">Zoom In</button>
+      <button class="zoom-out">Zoom Out</button>
+    </div>
     <button class="close-popup">Exit</button>
-    <p class="mobile-fallback" style="display: none;">Having trouble viewing? <a href="${filePath}" target="_blank">Open in new tab</a></p>
+    <p class="mobile-fallback" style="display: none;">Trouble viewing? <a href="${filePath}" target="_blank">Open in new tab</a></p>
   `;
 
   overlay.appendChild(popup);
@@ -142,12 +146,29 @@ function openBookPopup(filePath, bookItem) {
 
   setTimeout(() => popup.classList.add("active"), 10);
 
-  // Detect iOS and show fallback link if needed
+  // Zoom controls
+  const iframe = popup.querySelector(".pdf-viewer");
+  let scale = 0.8; // Default scale (smaller than full size)
+  const zoomInBtn = popup.querySelector(".zoom-in");
+  const zoomOutBtn = popup.querySelector(".zoom-out");
+
+  zoomInBtn.addEventListener("click", () => {
+    scale += 0.1;
+    if (scale > 2) scale = 2; // Max zoom
+    iframe.style.transform = `scale(${scale})`;
+  });
+
+  zoomOutBtn.addEventListener("click", () => {
+    scale -= 0.1;
+    if (scale < 0.5) scale = 0.5; // Min zoom
+    iframe.style.transform = `scale(${scale})`;
+  });
+
+  // iOS fallback
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   if (isIOS) {
-    const iframe = popup.querySelector("iframe");
     iframe.addEventListener("load", () => {
-      if (iframe.contentWindow.document.body.innerHTML === "") {
+      if (!iframe.contentWindow.document.body.innerHTML) {
         popup.querySelector(".mobile-fallback").style.display = "block";
       }
     });
