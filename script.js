@@ -123,20 +123,35 @@ function displayBooks(booksToShow) {
   });
 }
 
-// Open Book Popup
+// Open Book Popup (Fixed for iPhone)
 function openBookPopup(filePath, bookItem) {
   const overlay = document.createElement("div");
   overlay.className = "popup-overlay";
   const popup = document.createElement("div");
   popup.className = "book-popup";
+
+  // Use iframe instead of embed for better iOS compatibility
   popup.innerHTML = `
-    <embed src="${filePath}" type="application/pdf" />
+    <iframe src="${filePath}" frameborder="0" style="width: 100%; height: 80vh;"></iframe>
     <button class="close-popup">Exit</button>
+    <p class="mobile-fallback" style="display: none;">Having trouble viewing? <a href="${filePath}" target="_blank">Open in new tab</a></p>
   `;
+
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 
   setTimeout(() => popup.classList.add("active"), 10);
+
+  // Detect iOS and show fallback link if needed
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if (isIOS) {
+    const iframe = popup.querySelector("iframe");
+    iframe.addEventListener("load", () => {
+      if (iframe.contentWindow.document.body.innerHTML === "") {
+        popup.querySelector(".mobile-fallback").style.display = "block";
+      }
+    });
+  }
 
   const closeButton = popup.querySelector(".close-popup");
   closeButton.addEventListener("click", () => document.body.removeChild(overlay));
@@ -287,12 +302,9 @@ closeChatbot.addEventListener("click", () => {
 const draggableChat = document.getElementById("chatbot-draggable");
 let isDragging = false, currentX = 0, currentY = 0, initialX = 0, initialY = 0;
 
-// Mouse Events
 draggableChat.addEventListener("mousedown", startDragging);
 document.addEventListener("mousemove", drag);
 document.addEventListener("mouseup", stopDragging);
-
-// Touch Events
 draggableChat.addEventListener("touchstart", startDraggingTouch, { passive: false });
 document.addEventListener("touchmove", dragTouch, { passive: false });
 document.addEventListener("touchend", stopDragging);
@@ -344,7 +356,6 @@ function setChatbotPosition(x, y) {
   draggableChat.style.right = "auto";
 }
 
-// Initial Position
 currentX = window.innerWidth - 70;
 currentY = window.innerHeight - 70;
 setChatbotPosition(currentX, currentY);
@@ -374,7 +385,7 @@ async function handleUserIP() {
     if (!storedIP || storedIP !== userIP) {
       localStorage.setItem("userIP", userIP);
       console.log("New IP detected:", userIP);
-      // Uncomment below to open a new tab for new IPs (customize URL as needed)
+      // Uncomment to open a new tab for new IPs (customize URL)
       // window.open("https://bookshrine.com/welcome", "_blank");
     } else {
       console.log("Returning IP:", userIP);
