@@ -40,8 +40,8 @@ const ctx = canvas.getContext("2d");
 const clickSound = document.getElementById("click-sound");
 const universeSound = document.getElementById("universe-sound");
 
-// OpenAI API Key (replace with your own)
-const OPENAI_API_KEY = "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"; // Get from platform.openai.com
+// OpenAI API Key (using the one you provided)
+const OPENAI_API_KEY = "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";
 
 // Cosmic Background
 canvas.width = window.innerWidth;
@@ -123,16 +123,17 @@ function displayBooks(booksToShow) {
   });
 }
 
-// Open Book Popup (Adjusted PDF Size)
+// Open Book Popup (Fixed for Mobile Cutoff)
 function openBookPopup(filePath, bookItem) {
   const overlay = document.createElement("div");
   overlay.className = "popup-overlay";
   const popup = document.createElement("div");
   popup.className = "book-popup";
 
-  // Iframe with smaller default size and zoom controls
   popup.innerHTML = `
-    <iframe src="${filePath}" frameborder="0" class="pdf-viewer" style="width: 100%; height: 60vh; transform: scale(0.8); transform-origin: top left;"></iframe>
+    <div class="pdf-container">
+      <iframe src="${filePath}" frameborder="0" class="pdf-viewer"></iframe>
+    </div>
     <div class="pdf-controls">
       <button class="zoom-in">Zoom In</button>
       <button class="zoom-out">Zoom Out</button>
@@ -146,25 +147,25 @@ function openBookPopup(filePath, bookItem) {
 
   setTimeout(() => popup.classList.add("active"), 10);
 
-  // Zoom controls
   const iframe = popup.querySelector(".pdf-viewer");
-  let scale = 0.8; // Default scale (smaller than full size)
+  let scale = window.innerWidth < 600 ? 0.6 : 0.8; // Smaller default scale on phones
+  iframe.style.transform = `scale(${scale})`;
+
   const zoomInBtn = popup.querySelector(".zoom-in");
   const zoomOutBtn = popup.querySelector(".zoom-out");
 
   zoomInBtn.addEventListener("click", () => {
     scale += 0.1;
-    if (scale > 2) scale = 2; // Max zoom
+    if (scale > 2) scale = 2;
     iframe.style.transform = `scale(${scale})`;
   });
 
   zoomOutBtn.addEventListener("click", () => {
     scale -= 0.1;
-    if (scale < 0.5) scale = 0.5; // Min zoom
+    if (scale < 0.4) scale = 0.4; // Adjusted min scale for phones
     iframe.style.transform = `scale(${scale})`;
   });
 
-  // iOS fallback
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   if (isIOS) {
     iframe.addEventListener("load", () => {
