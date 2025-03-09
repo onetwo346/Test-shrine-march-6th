@@ -123,17 +123,16 @@ function displayBooks(booksToShow) {
   });
 }
 
-// Open Book Popup (Fixed for Mobile Cutoff)
+// Open Book Popup (Adjusted PDF Size)
 function openBookPopup(filePath, bookItem) {
   const overlay = document.createElement("div");
   overlay.className = "popup-overlay";
   const popup = document.createElement("div");
   popup.className = "book-popup";
 
+  // Iframe with smaller default size and zoom controls
   popup.innerHTML = `
-    <div class="pdf-container">
-      <iframe src="${filePath}" frameborder="0" class="pdf-viewer"></iframe>
-    </div>
+    <iframe src="${filePath}" frameborder="0" class="pdf-viewer" style="width: 100%; height: 60vh; transform: scale(0.8); transform-origin: top left;"></iframe>
     <div class="pdf-controls">
       <button class="zoom-in">Zoom In</button>
       <button class="zoom-out">Zoom Out</button>
@@ -147,20 +146,21 @@ function openBookPopup(filePath, bookItem) {
 
   setTimeout(() => popup.classList.add("active"), 10);
 
+  // Zoom controls
   const iframe = popup.querySelector(".pdf-viewer");
-  let scale = 0.8; // Default scale
+  let scale = 0.8; // Default scale (smaller than full size)
   const zoomInBtn = popup.querySelector(".zoom-in");
   const zoomOutBtn = popup.querySelector(".zoom-out");
 
   zoomInBtn.addEventListener("click", () => {
     scale += 0.1;
-    if (scale > 2) scale = 2;
+    if (scale > 2) scale = 2; // Max zoom
     iframe.style.transform = `scale(${scale})`;
   });
 
   zoomOutBtn.addEventListener("click", () => {
     scale -= 0.1;
-    if (scale < 0.5) scale = 0.5;
+    if (scale < 0.5) scale = 0.5; // Min zoom
     iframe.style.transform = `scale(${scale})`;
   });
 
